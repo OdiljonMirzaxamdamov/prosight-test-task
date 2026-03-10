@@ -4,19 +4,19 @@ export const predefinedUsers = [
   {
     id: 1,
     username: 'admin',
-    password: 'admin123',
+    password: 'prosightAdmin111',
     role: Role.ADMIN,
   },
   {
     id: 2,
     username: 'normal',
-    password: 'normal123',
+    password: 'prosightNormal222',
     role: Role.NORMAL,
   },
   {
     id: 3,
     username: 'limited',
-    password: 'limited123',
+    password: 'prosightLimited333',
     role: Role.LIMITED,
   },
 ];
