@@ -1,4 +1,5 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { GetLocusQueryDto } from './dto/get-locus-query.dto';
@@ -15,12 +16,15 @@ type AuthUser = {
 
 @Injectable()
 export class LocusService {
-  private readonly limitedAllowedRegionIds = [31232818, 41442807, 41447718];
+  private readonly limitedAllowedRegionIds: number[];
 
   constructor(
+    private readonly configService: ConfigService,
     @InjectRepository(LocusEntity)
     private readonly locusRepository: Repository<LocusEntity>,
-  ) {}
+  ) {
+    this.limitedAllowedRegionIds = this.getLimitedAllowedRegionIds();
+  }
 
   async findAll(query: GetLocusQueryDto, user: AuthUser) {
     this.validatePermissions(query, user);
@@ -123,5 +127,16 @@ export class LocusService {
   ) {
     const skip = (query.page - 1) * query.limit;
     qb.skip(skip).take(query.limit);
+  }
+
+  private getLimitedAllowedRegionIds() {
+    const rawValue =
+      this.configService.get<string>('LIMITED_ALLOWED_REGION_IDS') ??
+      '86118093,86696489,88186467';
+
+    return rawValue
+      .split(',')
+      .map(value => Number(value.trim()))
+      .filter(Number.isInteger);
   }
 }

@@ -61,6 +61,17 @@ describe('App e2e', () => {
       .expect(403);
   });
 
+  it('should allow task-defined region for limited user', async () => {
+    const token = await login('limited', 'prosightLimited333');
+
+    const response = await request(app.getHttpServer())
+      .get('/locus?regionId=86118093&limit=1')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200);
+
+    expect(Array.isArray(response.body)).toBe(true);
+  });
+
   it('should allow admin to access locus', async () => {
     const token = await login('admin', 'prosightAdmin111');
 
@@ -70,5 +81,18 @@ describe('App e2e', () => {
       .expect(200);
 
     expect(Array.isArray(response.body)).toBe(true);
+  });
+
+  it('should expose sideloaded locus member columns for admin', async () => {
+    const token = await login('admin', 'prosightAdmin111');
+
+    const response = await request(app.getHttpServer())
+      .get('/locus?id=155095&sideload=locusMembers&limit=1')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200);
+
+    expect(response.body[0].ursTaxId).toBeDefined();
+    expect(response.body[0].locusMembers[0].id).toBeDefined();
+    expect(response.body[0].locusMembers[0].ursTaxId).toBeDefined();
   });
 });

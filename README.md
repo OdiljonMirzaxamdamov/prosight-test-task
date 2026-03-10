@@ -73,7 +73,7 @@ Example requests:
 
 GET /locus
 GET /locus?id=155095
-GET /locus?regionId=31232818
+GET /locus?regionId=86118093
 GET /locus?sortBy=memberCount&sortOrder=DESC&limit=20
 GET /locus?sideload=locusMembers&page=1&limit=10
 
@@ -93,9 +93,9 @@ GET /locus?sideload=locusMembers&page=1&limit=10
 ### Limited user
 
 - can access data only for the following `regionId` values:
-  - 31232818
-  - 41442807
-  - 41447718
+  - 86118093
+  - 86696489
+  - 88186467
 - cannot use sideloading
 
 ## Database
@@ -132,6 +132,7 @@ DB_PASSWORD=NWDMCE5xdipIjRrp
 
 JWT_SECRET=super_secret_jwt_key
 JWT_EXPIRES_IN=1d
+LIMITED_ALLOWED_REGION_IDS=86118093,86696489,88186467
 
 Example template is also available in `.env.example`.
 
@@ -168,7 +169,8 @@ npm run test:e2e
 
 ## Notes and Assumptions
 
-- `assemblyId` was implemented according to the actual datasource schema type.
+- `assemblyId` was implemented according to the actual datasource schema type (`text` in the public database), even though the task text describes it as integer.
+- Default `LIMITED_ALLOWED_REGION_IDS` matches the task statement. In the current public database these IDs return no rows, so the variable can be overridden locally if you want non-empty demo data for the limited user.
 - API response fields use `camelCase`, while database columns use `snake_case`.
 - For filtering by `regionId` and `membershipStatus`, ORM relations are used.
 - No raw SQL was used in the implementation.
@@ -176,3 +178,4 @@ npm run test:e2e
 ## Author
 
 Test task completed by Odiljon Mirzaxamdamov.
+

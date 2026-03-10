@@ -24,13 +24,18 @@ export function serializeLocus(
   }
 
   if (sideload === Sideload.LOCUS_MEMBERS) {
+    const locusMembers = (locus.locusMembers ?? []).map(member => ({
+      id: member.id,
+      ursTaxId: member.ursTaxId,
+      regionId: member.regionId,
+      locusId: member.locusId,
+      membershipStatus: member.membershipStatus,
+    }));
+
     return {
       ...base,
-      locusMembers: (locus.locusMembers ?? []).map(member => ({
-        regionId: member.regionId,
-        locusId: member.locusId,
-        membershipStatus: member.membershipStatus,
-      })),
+      ursTaxId: locusMembers[0]?.ursTaxId ?? null,
+      locusMembers,
     };
   }
 
